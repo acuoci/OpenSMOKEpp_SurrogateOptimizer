@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opensmoke version="0.1a">
+
+<Properties>
+	<Author>
+	CRECK Modeling
+	</Author>
+	
+	<Place>
+	Politecnico di Milano
+	</Place>
+	
+	<Time>
+	18-Mar-2019 09:00:00
+	</Time>
+	
+	<Comments>
+	no comments
+	</Comments>
+
+</Properties>
+
+<Components>
+
+	<component name="NC4H10">
+	
+		<names>n-butane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="4" H="10" O="0"></composition>
+		<density type="constant">
+			600
+		</density>
+		<distillation type="Antoine3">
+			7.00961	1022.48	248.145
+		</distillation>
+		<cetane>20.6</cetane>
+		<TSI>15.</TSI>
+		
+	</component>
+	
+	<component name="NC7H16">
+
+		<names>n-heptane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="7" H="16" O="0"></composition>
+		<density type="constant">
+			680
+		</density>
+		<distillation type="Antoine3">
+			7.04605	1341.89	223.733
+		</distillation>
+		<cetane>56.0</cetane>
+		<TSI>55.</TSI>
+		
+	</component>
+	
+	<component name="IC5H12">
+
+		<names>i-pentane</names>
+		<family>
+			i-alkanes
+		</family>
+		<composition C="5" H="12" O="0"></composition>
+		<density type="constant">
+			616
+		</density>
+		<distillation type="Antoine3">
+			7.03015	1140.45	247.012
+		</distillation>
+		<cetane>25.8</cetane>
+		<TSI>20.</TSI>
+		
+	</component>
+		
+	<component name="IC8H18">
+
+		<names>i-octane</names>
+		<family>
+			i-alkanes
+		</family>
+		<composition C="8" H="18" O="0"></composition>
+		<density type="constant">
+			693
+		</density>
+		<distillation type="Antoine3">
+			6.99021	1358.75	231.405
+		</distillation>
+		<cetane>18.9</cetane>
+		<TSI>30.</TSI>
+		
+	</component>
+	
+	<component name="CHX">
+		
+		<names>cyclo-hexane</names>
+		<family>
+			c1-alkanes
+		</family>
+		<composition C="6" H="12" O="0"></composition>
+		<density type="constant">
+			778.1
+		</density>
+		<distillation type="Antoine3">
+			6.89019	1200.95	218.815
+		</distillation>
+		<cetane>18.</cetane>
+		<TSI>22.</TSI>
+		
+	</component>
+	
+	<component name="T124MBZ">
+	
+		<names>1,2,4-trimethylbenzene</names>
+		<family>
+			aromatics
+		</family>
+		<composition C="9" H="12" O="0"></composition>
+		<density type="constant">
+			876.1
+		</density>
+		<distillation type="Antoine3">
+			7.29329	1763.35	230.248
+		</distillation>
+		<cetane>8.9</cetane>
+		<TSI>70.</TSI>
+		
+	</component>	
+	
+	<component name="NC5H12">
+	
+		<names>n-pentane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="5" H="12" O="0"></composition>
+		<density type="constant">
+			626.0
+		</density>
+		<distillation type="Antoine3">
+			7.00877	1134.15	238.678
+		</distillation>
+		<cetane>44.8</cetane>
+		<TSI>12.</TSI>
+		
+	</component>
+
+	<component name="NC14H30">
+	
+		<names>n-tetradecane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="14" H="30" O="0"></composition>
+		<density type="constant">
+			764.0
+		</density>
+		<distillation type="Antoine3">
+			7.26165	1914.86	183.519
+		</distillation>
+		<cetane>85.1</cetane>
+		<TSI>17.</TSI>
+		
+	</component>
+
+	<component name="NC10H22">
+	
+		<names>n-decane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="10" H="22" O="0"></composition>
+		<density type="constant">
+			730.0
+		</density>
+		<distillation type="Antoine3">
+			7.21745	1693.93	216.459
+		</distillation>
+		<cetane>65.5</cetane>
+		<TSI>21.</TSI>
+		
+	</component>	
+	
+	<component name="O-XYL">
+	
+		<names>o-xylene</names>
+		<family>
+			aromatics
+		</family>
+		<composition C="8" H="10" O="0"></composition>
+		<density type="constant">
+			880.0
+		</density>
+		<distillation type="Antoine3">
+			7.14914	1566.59	222.596
+		</distillation>
+		<cetane>7.0</cetane>
+		<TSI>58.</TSI>
+		
+	</component>	
+
+	<component name="NC12H26">
+	
+		<names>n-dodecane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="12" H="26" O="0"></composition>
+		<density type="constant">
+			750.0
+		</density>
+		<distillation type="Antoine3">
+			7.22883	1807.47	199.381
+		</distillation>
+		<cetane>72.9</cetane>
+		<TSI>34.</TSI>
+		
+	</component>
+
+	<component name="MCH">
+	
+		<names>methyl-cyclo-hexane</names>
+		<family>
+			c1-alkanes
+		</family>
+		<composition C="7" H="14" O="0"></composition>
+		<density type="constant">
+			770.0
+		</density>
+		<distillation type="Antoine3">
+			7.00107	1375.13	232.819
+		</distillation>
+		<cetane>22.0</cetane>
+		<TSI>41.</TSI>
+		
+	</component>	
+
+</Components>
+
+</opensmoke>
