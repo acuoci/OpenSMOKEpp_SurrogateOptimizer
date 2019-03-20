@@ -1,5 +1,21 @@
 function [c, ceq] = NonLinearConstraints(z)
 
+% NonLinearConstraints - Non linear constraints for surrogate optimization
+% Not every MATLAB optimizer can handle non linear constraints. In the
+% current version only 'ga' (genetic algorithm) manages non linear
+% constraints
+%
+% Syntax:  [c, ceq] = NonLinearConstraints(z)
+%
+% Inputs:
+%    z - Current optimization variables
+%
+% Outputs:
+%    c - vector of non linear inequalities
+%    ceq - vector of non linear equalities
+%
+% --------------------------- BEGIN CODE -------------------------------- %
+
     global target;
     global database;
     global optimizer;

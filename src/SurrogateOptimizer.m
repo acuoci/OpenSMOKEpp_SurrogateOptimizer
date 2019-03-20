@@ -1,3 +1,30 @@
+% ----------------------------------------------------------------------- %
+%                   OPTIMIZER FOR FUEL SURROGATES                         %
+% ----------------------------------------------------------------------- %
+%                                                                         %
+% This Matlab package implements an optimization algorithm to find the    %
+% best fuel surrogate matching a set of experimental properties, such as  %
+% molecular weight, H/C ratio, cetane number, TSI (Threshold Soot Index), %
+% and distillation curves.                                                %
+%                                                                         %
+% The methodology is inspired by the following papers:                    %
+%  * K. Narayanaswamy, H. Pitsch, P. Pepiot, Combustion and Flame,        %
+%    165, p. 288-309 (2016)                                               %
+%  * K. Narayanaswamy, P. Pepiot, Combustion Theory and Modelling,        %
+%    22(5), p. 883-897 (2018)                                             %
+%                                                                         %
+% It is written purely in Matlab language. It is self-contained. There    %
+% is no external dependency.                                              %
+%                                                                         %
+% Note: this package requires Matlab R2016b or latter, since it utilizes  %
+% a new series of Matlab features.                                        %
+%                                                                         %
+% Authors                                                                 %
+% Alberto Cuoci, Marco Mehl                                               %
+% CRECK Modeling Lab                                                      %
+% ----------------------------------------------------------------------- %
+
+
 clear variables;
 close all;
 

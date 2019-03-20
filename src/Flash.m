@@ -1,5 +1,22 @@
 function y=Flash(T, P, x0, alpha, type, coeffs)
 
+% Flash - Solves a flash
+%
+% Syntax:  y=Flash(T, P, x0, alpha, type, coeffs)
+%
+% Inputs:
+%    T - temperature (in C)
+%    P - pressure (in mmHg)
+%    x0 - mixture composition (in molar fractions)
+%    alpha - 
+%    type - type of correlation for calculating the vapor pressure
+%    coeffs - vector of coefficients from the database
+%
+% Outputs:
+%    y - molar composition
+%
+% --------------------------- BEGIN CODE -------------------------------- %
+
     options = optimset('Display','off');
     y = fsolve(@balance, T, options);
 

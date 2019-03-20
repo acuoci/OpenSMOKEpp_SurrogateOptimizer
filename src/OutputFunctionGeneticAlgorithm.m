@@ -1,5 +1,23 @@
 function [state,options,optchanged] = OutputFunctionGeneticAlgorithm(options,state,flag)
 
+% OutputFunctionGeneticAlgorithm - Output function for genetic optimizer
+%
+% Syntax:  [stop,options,optchanged] = ...
+%          OutputFunctionPatternSearch(optimvalues,options,state)
+%
+% Inputs:
+%    options - options
+%    state - structure containing information about the current generation
+%    flag - current status of the algorithm
+%
+% Outputs:
+%    state - structure containing information about the current generation
+%    options - options as modified by the output function
+%    optchanged - boolean flag indicating changes to options. To change 
+%                 options for subsequent iterations, set optchanged to true
+%
+% --------------------------- BEGIN CODE -------------------------------- %
+
     global optimizer;
     global fOut;
     global database;
@@ -9,7 +27,7 @@ function [state,options,optchanged] = OutputFunctionGeneticAlgorithm(options,sta
     switch flag
         case 'init'
 
-            fOut = fopen('output.txt','w');
+            fOut = fopen('optimization.out','w');
             fprintf(fOut, '%7s %12s %12s %12s %12s', '#', 'F_Obj', 'F_MW', 'F_HC', 'F_DC');
             for i=1:database.nx
                 fprintf(fOut, '%12s', database.name(i));

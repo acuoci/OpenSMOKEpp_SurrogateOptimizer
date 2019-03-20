@@ -1,4 +1,22 @@
-function [database] = ReshapeDatabase(components_database, family_names, list_species)
+function database = ...
+    ReshapeDatabase(components_database, family_names, list_species)
+
+% ReshapeDatabase - Extracts from an existing database (see
+% PopulateDatabase function) the properties of a list of species selcted 
+% by the user which will be used in the optimization procedure 
+%
+% Syntax:  database = ...
+%          ReshapeDatabase(components_database, family_names, list_species)
+%
+% Inputs:
+%    components_database - vector of individual components
+%    family_names - names of families
+%    list_species - user defined list of species
+%
+% Outputs:
+%    database - database of user defined selected species
+%
+% --------------------------- BEGIN CODE -------------------------------- %
 
     % Reshape database
     database.nx = length(list_species);

@@ -1,5 +1,21 @@
 function components_database = ...
-         PopulateDatabase(foldername, filename, components_database)
+         PopulateDatabase(foldername, filename)
+     
+% PopulateDatabase - Reads a XML database containing the relevant data
+% such as atomic composition, cetane number, thermodynamic properties, etc.
+% for individual species.
+%
+% Syntax:  components_database = ...
+%          PopulateDatabase(foldername, filename, components_database)
+%
+% Inputs:
+%    foldername - Name of folder containing the database
+%    filename - Name of XML file corresponding to the database
+%
+% Outputs:
+%    components_database - vector of individual components
+%
+% --------------------------- BEGIN CODE -------------------------------- %
 
     % PARSEXML Convert XML file to a MATLAB structure.
     try

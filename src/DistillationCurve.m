@@ -1,4 +1,25 @@
-function [vol, T_distillation] = DistillationCurve(P, x0, delta, rho, MW, type, coeffs)
+function [vol, T_distillation] = ...
+         DistillationCurve(P, x0, delta, rho, MW, type, coeffs)
+
+% DistillationCurve - Calculates the distillation curve
+%
+% Syntax:  [vol, T_distillation] = ...
+%          DistillationCurve(P, x0, delta, rho, MW, type, coeffs)
+%
+% Inputs:
+%    P - pressure (in mmHg)
+%    x0 - mixture composition (in molar fractions)
+%    delta - step increment for evaluating the curve
+%    rho - densities of species (in kg/m3)
+%    MW - molecular weights of species (in kg/kmol)
+%    type - type of correlation for calculating the vapor pressure
+%    coeffs - vector of coefficients from the database
+%
+% Outputs:
+%    vol - vector of recovered volumes (%)
+%    T_distillation - vector of distillation temperatures (in C)
+%
+% --------------------------- BEGIN CODE -------------------------------- %
 
     % Memory pre-allocation
     mol=0:delta:100;

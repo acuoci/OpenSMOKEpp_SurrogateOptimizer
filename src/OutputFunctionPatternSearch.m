@@ -1,4 +1,24 @@
-function [stop,options,optchanged] = OutputFunctionPatternSearch(optimvalues,options,state)
+function [stop,options,optchanged] = ...
+    OutputFunctionPatternSearch(optimvalues,options,state)
+
+% OutputFunctionParticleSwarm - Output function for pattern search
+% optimizer.
+%
+% Syntax:  [stop,options,optchanged] = ...
+%          OutputFunctionPatternSearch(optimvalues,options,state)
+%
+% Inputs:
+%    optimvalues - structure containing information about the current 
+%                  state of the solver
+%    options - options
+%    state - current state in which the output function is called
+%
+% Outputs:
+%    stop - Provides a way to stop the algorithm at the current iteration
+%    options - options
+%    optchanged - boolean flag indicating changes to options
+%
+% --------------------------- BEGIN CODE -------------------------------- %
 
     global optimizer;
     global fOut;
@@ -10,7 +30,7 @@ function [stop,options,optchanged] = OutputFunctionPatternSearch(optimvalues,opt
     switch state
         case 'init'
             
-            fOut = fopen('output.txt','w');
+            fOut = fopen('optimization.out','w');
             fprintf(fOut, '%7s %12s %12s %12s %12s', '#', 'F_Obj', 'F_MW', 'F_HC', 'F_DC');
             for i=1:database.nx
                 fprintf(fOut, '%12s', database.name(i));

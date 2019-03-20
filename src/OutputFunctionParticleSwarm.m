@@ -1,5 +1,20 @@
 function stop = OutputFunctionParticleSwarm(options,state)
 
+% OutputFunctionParticleSwarm - Output function for particle swarm
+% optimizer.
+%
+% Syntax:  stop = OutputFunctionParticleSwarm(options,state)
+%
+% Inputs:
+%    options - Structure containing information about the swarm in the 
+%              current iteration
+%    state - String giving the state of the current iteration
+%
+% Outputs:
+%    stop - if true, it stops the solver
+%
+% --------------------------- BEGIN CODE -------------------------------- %
+
     global optimizer;
     global fOut;
     global database;
@@ -9,7 +24,7 @@ function stop = OutputFunctionParticleSwarm(options,state)
     switch state
         case 'init'
             
-            fOut = fopen('output.txt','w');
+            fOut = fopen('optimization.out','w');
             fprintf(fOut, '%7s %12s %12s %12s %12s', '#', 'F_Obj', 'F_MW', 'F_HC', 'F_DC');
             for i=1:database.nx
                 fprintf(fOut, '%12s', database.name(i));

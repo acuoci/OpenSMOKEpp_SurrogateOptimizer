@@ -1,5 +1,22 @@
 function f = ObjectiveFunction(z)
 
+% ObjectiveFunction - Calculates the objective function. The optimization
+% variables z are the number of moles of individual components. In case a
+% a genetic algorithm is adopted, the vector of variables z is divided in
+% two parts: the first part corresponds to integers (0 or 1) indicating if
+% a species is present, while the second part corresponds to the number of
+% moles of each species
+%
+% Syntax:  f = ObjectiveFunction(z)
+%
+% Inputs:
+%    z - Current optimization variables
+%
+% Outputs:
+%    f - objective function
+%
+% --------------------------- BEGIN CODE -------------------------------- %
+
     global database;
     global target;
     global optimizer;

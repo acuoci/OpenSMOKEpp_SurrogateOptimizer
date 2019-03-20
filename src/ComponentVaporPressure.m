@@ -1,5 +1,20 @@
-% Calculate and return vapor pressure from parameters Antoine and temperature
+% Calculate and return 
 function vp = ComponentVaporPressure(T, type, coeffs)
+
+% ComponentVaporPressure - Calculates the vapor pressure from Antoine 
+% parameters and temperature
+%
+% Syntax:  vp = ComponentVaporPressure(T, type, coeffs)
+%
+% Inputs:
+%    T - temperature (in C)
+%    type - type of correlation for calculating the vapor pressure
+%    coeffs - vector of coefficients from the database
+%
+% Outputs:
+%    rho - vapor pressure (in mmHg)
+%
+% --------------------------- BEGIN CODE -------------------------------- %
 
     vp = zeros(1,length(type));
     for i=1:length(type)
