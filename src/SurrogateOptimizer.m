@@ -19,11 +19,11 @@
 % Note: this package requires Matlab R2016b or latter, since it utilizes  %
 % a new series of Matlab features.                                        %
 %                                                                         %
-% Authors                                                                 %
-% Alberto Cuoci, Marco Mehl                                               %
+% A. Cuoci, D. Demetryouss, M. Mehl                                       %
 % CRECK Modeling Lab                                                      %
+% Department of Chemistry, Materials, and Chemical Engineering            %
+% Politecnico di Milano (Italy)                                           %
 % ----------------------------------------------------------------------- %
-
 
 clear variables;
 close all;
@@ -55,7 +55,7 @@ optimizer.type = 'ga';
 family_names = { 'n-alkanes', 'i-alkanes', 'c1-alkanes', 'aromatics' };
 
 % List of active species
-list_species = { 'NC4H10', 'NC10H22', 'NC14H30', ...
+list_species = { 'NC4H10', 'NC10H22', 'NC16H34', ...
                  'IC5H12', 'IC8H18', ...
                  'CHX', 'MCH', ...
                  'T124MBZ', 'O-XYL' };
@@ -79,9 +79,14 @@ rng_generator = 'twister';  % 'twister' | 'combRecursive' | 'multFibonacci'
 % ----------------------------------------------------------------------- %
 
 target.HC  = 1.91;          % H/C ratio (experiments)
-target.MW  = 153.;          % Molecular weight (experiments)
+target.MW  = 153.;          % Molecular weight (kg/kmol experiments)
 target.CN  = 43.;           % Cetane number (experiments)
 target.TSI = 50.;           % Threshold Soot Index (experiments)
+target.mu = 1;              % Viscosity (cP @298K, experiments)
+target.YSI = 10;            % Yield Sooting Index (experiments)
+
+% Viscosity
+target.Tvis = 298.;         % Temperature at which viscosity is evaluated (in K)
 
 % Distillation curve
 target.vol = ReadFromFileTable('../data/DistillationCurve.JetA1', 1);
@@ -95,6 +100,8 @@ target.sigma_HC  = 0.1;          % H/C ratio
 target.sigma_CN  = 2.5;          % Cetane number
 target.sigma_TSI = 15.;          % Threshold Soot Index
 target.sigma_DC  = 2.5;          % Distillation temperature (in C)
+target.sigma_mu = 1.;            % Viscosity (in cP)
+target.sigma_YSI  = 10.;         % Yield Sooting Index (experiments)
 
 % Additional options: genetic algorithm only
 target.global_constraints_nspecies = true;      % constraints on total number of species
@@ -119,21 +126,28 @@ optimizer.weight_MW  = 0.;          % molecular weight
 optimizer.weight_HC  = 0.;          % H/C ratio
 optimizer.weight_CN  = 0.;          % cetane number
 optimizer.weight_TSI = 0.;          % threshold soot index
+optimizer.weight_mu  = 0.;          % viscosity
+optimizer.weight_YSI = 0.;          % yield soot index
 optimizer.weight_DC  = 1.;          % distillation curve
 
-% Absolute constraints
+
+% Absolute constraints (ga only)
 optimizer.abs_constraints = false;  % absolute contraints
 optimizer.delta_abs_MW  = 10.0;     % molecular weight (kg/kmol)
 optimizer.delta_abs_HC  = 0.20;     % H/C ratio (-)
 optimizer.delta_abs_CN  = 10.0;     % cetane number (0-100)
 optimizer.delta_abs_TSI = 100.;     % threshold soot index (0-100)
+optimizer.delta_abs_mu  = 1.;       % viscosity (cP)
+optimizer.delta_abs_YSI = 100.;     % yield soot index
 
-% Relative constraints
+% Relative constraints (ga only)
 optimizer.rel_constraints = false;  % relative contraints
 optimizer.delta_rel_MW  = 0.025;    % molecular weight
 optimizer.delta_rel_HC  = 0.025;    % H/C ratio
 optimizer.delta_rel_CN  = 0.025;    % cetane number
 optimizer.delta_rel_TSI = 0.025;    % threshold soot index
+optimizer.delta_rel_mu  = 0.025;    % viscosity
+optimizer.delta_rel_YSI = 0.025;    % yield soot index
 
 % Additional options: genetic algorithm only
 genetic_algorithm.population_size = 200;        % population size
@@ -170,7 +184,7 @@ if (plot_distillation_curves == true)
     figure;
     plot (target.vol, target.Td, 'o');
     xlabel('volume recovery (%)');
-    ylabel('temperature (°C)');
+    ylabel('temperature (C)');
     hold on;
     for i=2:database.nx
         x = zeros(1,database.nx);
@@ -357,7 +371,7 @@ rhos = ComponentDensity(database.rhoType, database.rhoCoeffs);
 [vol, Td] = DistillationCurve(target.P, solution.x, target.delta, rhos, database.MW, database.vpType, database.vpCoeffs);
 plot (vol,Td, '-', target.vol, target.Td, 'o');
 xlabel('volume recovery (%)');
-ylabel('temperature (°C)');
+ylabel('temperature (C)');
 
 
 fprintf('------------------------------------------------------------------\n');

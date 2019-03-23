@@ -65,6 +65,13 @@ function f = ObjectiveFunction(z)
     % Cetane number
     TSI_surrogate = x*database.TSI';
     
+    % Viscosity
+    mus = ComponentViscosity(target.Tvis, database.muType, database.muCoeffs);    % Viscosity single components
+    mu_surrogate = sum(omega.*(mus.^(1/3)))^3;                                    % Blending rule: mu^1/3 = sum (omega_i*mu_i^1/3)
+    
+    % YSI
+    YSI_surrogate=omega*database.YSI';
+    
     % Distillation curve
     optimizer.F_DC = 0.;
     if (optimizer.weight_DC ~= 0)
@@ -89,7 +96,10 @@ function f = ObjectiveFunction(z)
         optimizer.F_HC  = (1. - exp( -(HC_surrogate-target.HC)^2/(2*target.sigma_HC^2)))^2;
         optimizer.F_MW  = (1. - exp( -(MW_surrogate-target.MW)^2/(2*target.sigma_MW^2)))^2;
         optimizer.F_CN  = (1. - exp( -(CN_surrogate-target.CN)^2/(2*target.sigma_CN^2)))^2;
-        optimizer.F_TSI  = (1. - exp( -(TSI_surrogate-target.TSI)^2/(2*target.sigma_TSI^2)))^2;
+        optimizer.F_TSI = (1. - exp( -(TSI_surrogate-target.TSI)^2/(2*target.sigma_TSI^2)))^2;
+        optimizer.F_mu  = (1. - exp( -(mu_surrogate-target.mu)^2/(2*target.sigma_mu^2)))^2;
+        optimizer.F_YSI = (1. - exp( -(YSI_surrogate-target.YSI)^2/(2*target.sigma_YSI^2)))^2;
+
         
     elseif (optimizer.error_type == 2)
         
@@ -97,13 +107,18 @@ function f = ObjectiveFunction(z)
         optimizer.F_MW  = (1. - MW_surrogate/target.MW)^2;
         optimizer.F_CN  = (1. - CN_surrogate/target.CN)^2;
         optimizer.F_TSI = (1. - TSI_surrogate/target.TSI)^2; 
-        
+        optimizer.F_mu  = (1. - mu_surrogate/target.mu)^2;
+        optimizer.F_YSI = (1. - YSI_surrogate/target.YSI)^2;
+ 
+
     elseif (optimizer.error_type == 3)
         
         optimizer.F_HC  = (1. - exp( -(HC_surrogate-target.HC)^2/target.HC))^2;
         optimizer.F_MW  = (1. - exp( -(MW_surrogate-target.MW)^2/target.MW))^2;
         optimizer.F_CN  = (1. - exp( -(CN_surrogate-target.CN)^2/target.CN))^2;
         optimizer.F_TSI = (1. - exp( -(TSI_surrogate-target.TSI)^2/target.TSI))^2;
+        optimizer.F_mu  = (1. - exp( -(mu_surrogate-target.mu)^2/target.mu))^2;
+        optimizer.F_YSI = (1. - exp( -(YSI_surrogate-target.YSI)^2/target.YSI))^2;
          
     end
 
@@ -112,6 +127,8 @@ function f = ObjectiveFunction(z)
         optimizer.weight_MW*optimizer.F_MW + ...
         optimizer.weight_CN*optimizer.F_CN + ...
         optimizer.weight_TSI*optimizer.F_TSI + ...
+        optimizer.weight_mu*optimizer.F_mu + ...
+        optimizer.weight_YSI*optimizer.F_YSI + ...        
         optimizer.weight_DC*optimizer.F_DC;
 
 end

@@ -15,7 +15,7 @@
 	</Time>
 	
 	<Comments>
-	no comments
+	DynViscLiq => log10(μ liq) = A + B/T + C*T + D*T^2	μ liq (cP)
 	</Comments>
 
 </Properties>
@@ -37,6 +37,31 @@
 		</distillation>
 		<cetane>20.6</cetane>
 		<TSI>15.</TSI>
+		<YSI>0.</YSI>
+		<viscosity type="law-1">
+			-6.859	6.74E+02	0.022	-3.07E-05
+		</viscosity>		
+	</component>
+	
+	<component name="NC5H12">
+	
+		<names>n-pentane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="5" H="12" O="0"></composition>
+		<density type="constant">
+			626.0
+		</density>
+		<distillation type="Antoine3">
+			7.00877	1134.15	238.678
+		</distillation>
+		<cetane>44.8</cetane>
+		<TSI>12.</TSI>
+		<YSI>0.</YSI>
+		<viscosity type="law-1">
+			-7.1711	7.47E+02	0.0217	-2.72E-05
+		</viscosity>
 		
 	</component>
 	
@@ -55,8 +80,77 @@
 		</distillation>
 		<cetane>56.0</cetane>
 		<TSI>55.</TSI>
-		
+		<YSI>3.</YSI>
+		<viscosity type="law-1">
+			-5.7782	8.06E+02	0.0134	-1.48E-05
+		</viscosity>		
 	</component>
+
+	<component name="NC10H22">
+	
+		<names>n-decane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="10" H="22" O="0"></composition>
+		<density type="constant">
+			730.0
+		</density>
+		<distillation type="Antoine3">
+			7.21745	1693.93	216.459
+		</distillation>
+		<cetane>65.5</cetane>
+		<TSI>21.</TSI>
+		<YSI>7.4</YSI>
+		<viscosity type="law-1">
+			-6.0716	1.02E+03	0.0122	-1.19E-05
+		</viscosity>		
+	</component>
+	
+	
+	<component name="NC12H26">
+	
+		<names>n-dodecane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="12" H="26" O="0"></composition>
+		<density type="constant">
+			750.0
+		</density>
+		<distillation type="Antoine3">
+			7.22883	1807.47	199.381
+		</distillation>
+		<cetane>72.9</cetane>
+		<TSI>34.</TSI>
+		<YSI>9.8</YSI>
+		<viscosity type="law-1">
+			-7.0687	1.25E+03	0.0137	-1.22E-05
+		</viscosity>		
+	</component>
+
+	
+	<component name="NC16H34">
+	
+		<names>n-hexadecane</names>
+		<family>
+			n-alkanes
+		</family>
+		<composition C="16" H="34" O="0"></composition>
+		<density type="constant">
+			770.0
+		</density>
+		<distillation type="Antoine3">
+			7.36235	2094.08	180.407
+		</distillation>
+		<cetane>100</cetane>
+		<TSI>17.</TSI>
+		<YSI>11.7</YSI>
+		<viscosity type="law-1">
+			-8.1894	1.56E+03	0.0153	-1.24E-05
+		</viscosity>		
+	</component>	
+
 	
 	<component name="IC5H12">
 
@@ -73,6 +167,10 @@
 		</distillation>
 		<cetane>25.8</cetane>
 		<TSI>20.</TSI>
+		<YSI>0.</YSI>
+		<viscosity type="law-1">
+			-5.8108	7.07E+02	0.0148	-1.85E-05
+		</viscosity>
 		
 	</component>
 		
@@ -91,6 +189,32 @@
 		</distillation>
 		<cetane>18.9</cetane>
 		<TSI>30.</TSI>
+		<YSI>23.8</YSI>
+		<viscosity type="law-1">
+			-15.042	2.00E+03	0.0371	-3.45E-05
+		</viscosity>
+		
+	</component>
+	
+	<component name="IC16H34">
+
+		<names>i-cetane</names>
+		<family>
+			i-alkanes
+		</family>
+		<composition C="16" H="34" O="0"></composition>
+		<density type="constant">
+			793
+		</density>
+		<distillation type="Antoine3">
+			6.97298	1753.29	154.45
+		</distillation>
+		<cetane>15.0</cetane>
+		<TSI>30.</TSI>
+		<YSI>31.0</YSI>
+		<viscosity type="law-1">
+			-4.847	1.06E+03	0.0079	-7.36E-06
+		</viscosity>
 		
 	</component>
 	
@@ -109,80 +233,37 @@
 		</distillation>
 		<cetane>18.</cetane>
 		<TSI>22.</TSI>
+		<YSI>20.8</YSI>
+		<viscosity type="law-1">
+			4.7423	-2.53E+02	-0.0169	1.25E-05
+		</viscosity>
 		
 	</component>
 	
-	<component name="T124MBZ">
 	
-		<names>1,2,4-trimethylbenzene</names>
+	<component name="MCH">
+	
+		<names>methyl-cyclo-hexane</names>
 		<family>
-			aromatics
+			c1-alkanes
 		</family>
-		<composition C="9" H="12" O="0"></composition>
+		<composition C="7" H="14" O="0"></composition>
 		<density type="constant">
-			876.1
+			770.0
 		</density>
 		<distillation type="Antoine3">
-			7.29329	1763.35	230.248
+			7.00107	1375.13	232.819
 		</distillation>
-		<cetane>8.9</cetane>
-		<TSI>70.</TSI>
-		
-	</component>	
-	
-	<component name="NC5H12">
-	
-		<names>n-pentane</names>
-		<family>
-			n-alkanes
-		</family>
-		<composition C="5" H="12" O="0"></composition>
-		<density type="constant">
-			626.0
-		</density>
-		<distillation type="Antoine3">
-			7.00877	1134.15	238.678
-		</distillation>
-		<cetane>44.8</cetane>
-		<TSI>12.</TSI>
+		<cetane>22.0</cetane>
+		<TSI>41.</TSI>
+		<YSI>20.8</YSI>
+		<viscosity type="law-1">
+			-1.9879	5.08E+02	0.0012	-2.73E-06
+		</viscosity>
 		
 	</component>
+	
 
-	<component name="NC14H30">
-	
-		<names>n-tetradecane</names>
-		<family>
-			n-alkanes
-		</family>
-		<composition C="14" H="30" O="0"></composition>
-		<density type="constant">
-			764.0
-		</density>
-		<distillation type="Antoine3">
-			7.26165	1914.86	183.519
-		</distillation>
-		<cetane>85.1</cetane>
-		<TSI>17.</TSI>
-		
-	</component>
-
-	<component name="NC10H22">
-	
-		<names>n-decane</names>
-		<family>
-			n-alkanes
-		</family>
-		<composition C="10" H="22" O="0"></composition>
-		<density type="constant">
-			730.0
-		</density>
-		<distillation type="Antoine3">
-			7.21745	1693.93	216.459
-		</distillation>
-		<cetane>65.5</cetane>
-		<TSI>21.</TSI>
-		
-	</component>	
 	
 	<component name="O-XYL">
 	
@@ -199,45 +280,98 @@
 		</distillation>
 		<cetane>7.0</cetane>
 		<TSI>58.</TSI>
-		
+		<YSI>193.1</YSI>
+		<viscosity type="law-1">
+			-7.8805	1.25E+03	0.0161	-1.40E-05
+		</viscosity>		
 	</component>	
-
-	<component name="NC12H26">
 	
-		<names>n-dodecane</names>
+
+	<component name="T124MBZ">
+	
+		<names>1,2,4-trimethylbenzene</names>
 		<family>
-			n-alkanes
+			aromatics
 		</family>
-		<composition C="12" H="26" O="0"></composition>
+		<composition C="9" H="12" O="0"></composition>
 		<density type="constant">
-			750.0
+			876.1
 		</density>
 		<distillation type="Antoine3">
-			7.22883	1807.47	199.381
+			7.29329	1763.35	230.248
 		</distillation>
-		<cetane>72.9</cetane>
-		<TSI>34.</TSI>
+		<cetane>8.9</cetane>
+		<TSI>70.</TSI>
+		<YSI>260.6</YSI>
+		<viscosity type="law-1">
+			-8.4686	1.36E+03	0.0173	-1.46E-05
+		</viscosity>
 		
 	</component>
-
-	<component name="MCH">
 	
-		<names>methyl-cyclo-hexane</names>
+
+	<component name="BBZ">
+	
+		<names>buthylbenzene</names>
 		<family>
-			c1-alkanes
+			aromatics
 		</family>
-		<composition C="7" H="14" O="0"></composition>
+		<composition C="10" H="14" O="0"></composition>
 		<density type="constant">
-			770.0
+			860.0
 		</density>
 		<distillation type="Antoine3">
-			7.00107	1375.13	232.819
+			7.18472	1720.37	216.413
 		</distillation>
-		<cetane>22.0</cetane>
-		<TSI>41.</TSI>
-		
-	</component>	
+		<cetane>12</cetane>
+		<TSI>70.</TSI>
+		<YSI>181.0</YSI>
+		<viscosity type="law-1">
+			-7.2536	1.21E+03	0.0143	-1.23E-05
+		</viscosity>		
+	</component>
 
+	<component name="TETRA">
+	
+		<names>tetralin</names>
+		<family>
+			naphto-aromatics
+		</family>
+		<composition C="11" H="10" O="0"></composition>
+		<density type="constant">
+			970.0
+		</density>
+		<distillation type="Antoine3">
+			7.16735	1806.14	213.732
+		</distillation>
+		<cetane>9</cetane>
+		<TSI>70.</TSI>
+		<YSI>264.4</YSI>
+		<viscosity type="law-1">
+			-6.371	1.27E+03	0.0105	-8.12E-06
+		</viscosity>		
+	</component>
+	
+	<component name="C10H7CH3">
+		<names>alphamethylnaphthalene</names>
+		<family>
+			aromatics
+		</family>
+		<composition C="11" H="10" O="0"></composition>
+		<density type="constant">
+			1001.0
+		</density>
+		<distillation type="Antoine3">
+			7.26987	2027.9	217.356
+		</distillation>
+		<cetane>0</cetane>
+		<TSI>70.</TSI>
+		<YSI>471.2</YSI>
+		<viscosity type="law-1">
+			-7.8389	1.56E+03	0.0132	-9.50E-06
+		</viscosity>		
+	</component>	
+	
 </Components>
 
 </opensmoke>

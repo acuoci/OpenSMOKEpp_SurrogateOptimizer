@@ -51,12 +51,16 @@ function database = ...
             database.MW(count) = components_database(k).MW;
             database.CN(count) = components_database(k).CN;
             database.TSI(count) = components_database(k).TSI;
+            database.YSI(count) = components_database(k).YSI;
 
             database.rhoType(count) = string(components_database(k).rhoType);
             database.rhoCoeffs(count) = components_database(k).rhoCoeffs;
 
             database.vpType(count) = string(components_database(k).distillationType);
             database.vpCoeffs{count} = components_database(k).distillationCoeffs;
+            
+            database.muType(count) = string(components_database(k).muType);
+            database.muCoeffs{count} = components_database(k).muCoeffs;
 
             % Recognize families
             for i=1:length(family_names)
@@ -82,14 +86,17 @@ function database = ...
         database.Tbn(j) = Flash(0, 760., x0, 0., database.vpType, database.vpCoeffs);
     end
     
-    fprintf('------------------------------------------------------------------\n');
-    fprintf('   Database: individual species                                   \n');
-    fprintf('------------------------------------------------------------------\n');
-    fprintf('       Species Family      MW     H/C     CN     TSI    Tb(C)     \n');
+    % Viscosities
+    mus = ComponentViscosity(298., database.muType, database.muCoeffs);
+    
+    fprintf('--------------------------------------------------------------------------------------\n');
+    fprintf('   Database: individual species                                                       \n');
+    fprintf('--------------------------------------------------------------------------------------\n');
+    fprintf('       Species Family      MW     H/C     CN     TSI     YSI    mu(cP)    Tb(C)       \n');
     for j = 1:length(list_species)
-        fprintf('%14s %6d %7.2f %7.3f %6.2f  %6.2f  %7.3f\n', ...
+        fprintf('%14s %6d %7.2f %7.3f %6.2f  %6.2f  %6.2f  %6.2f    %7.3f\n', ...
             list_species{j}, database.family_index(j), ...
             database.MW(j), database.nH(j)/database.nC(j), database.CN(j),...
-            database.TSI(j), database.Tbn(j) );
+            database.TSI(j), database.YSI(j), mus(j), database.Tbn(j) );
     end
-    fprintf('------------------------------------------------------------------\n');
+    fprintf('--------------------------------------------------------------------------------------\n');
