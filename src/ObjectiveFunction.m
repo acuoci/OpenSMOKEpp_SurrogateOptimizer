@@ -1,4 +1,4 @@
-function f = ObjectiveFunction(z)
+function [f,F] = ObjectiveFunction(z,allowedspecies,database,target,optimizer,net,idtkriging,lbvmodel)
 
 % ObjectiveFunction - Calculates the objective function. The optimization
 % variables z are the number of moles of individual components. In case a
@@ -7,20 +7,18 @@ function f = ObjectiveFunction(z)
 % a species is present, while the second part corresponds to the number of
 % moles of each species
 %
-% Syntax:  f = ObjectiveFunction(z)
+% Syntax:  f = ObjectiveFunction(z,allowedspecies,...)
 %
 % Inputs:
 %    z - Current optimization variables
-%
+%    allowedspecies - A logical vector that represents the species that can
+%                     be used (1) or are excluded by default (0)
 % Outputs:
 %    f - objective function
-%
+%    F - a struct with the contributions and weights of each property to
+%        the objective function
 % --------------------------- BEGIN CODE -------------------------------- %
 
-    global database;
-    global target;
-    global optimizer;
-    
     % Number of components
     nx = database.nx;
 
@@ -31,16 +29,21 @@ function f = ObjectiveFunction(z)
 
         % Molar fractions
         x = z((nx+1):2*nx).*family;
-        sumx = sum(x);
-        x = x/sumx;
-        
+        x = x/sum(x);
+        if sum(family)==0, x=zeros(1,nx); end
+        xtemp = x;
     else
-        
-        x = z;
-        sumx = sum(x);
-        x = x/sumx;
-        
-    end   
+        x = zeros(1,length(allowedspecies));
+        xtemp = z;
+    end
+    iz = 1;
+    for ix = 1:length(allowedspecies)
+        if allowedspecies(ix) == 1
+            x(ix) = xtemp(iz);
+            iz = iz+1;
+        end
+    end
+    x = x/sum(x);  
     
     % Molecular Weight
     MW_surrogate = sum(x.*database.nH)*1+sum(x.*database.nC)*12;
@@ -53,6 +56,7 @@ function f = ObjectiveFunction(z)
     
     % Density (kg/m3)
     rhos = ComponentDensity(database.rhoType, database.rhoCoeffs);
+    rho_surrogate=x*rhos';
     
     % Volumetric fractions (kg/m3)
     V = omega./rhos;
@@ -62,7 +66,7 @@ function f = ObjectiveFunction(z)
     % Cetane number
     CN_surrogate = V*database.CN';
     
-    % Cetane number
+    % TSI number
     TSI_surrogate = x*database.TSI';
     
     % Viscosity
@@ -73,62 +77,103 @@ function f = ObjectiveFunction(z)
     YSI_surrogate=omega*database.YSI';
     
     % Distillation curve
-    optimizer.F_DC = 0.;
+    F_DC = 0.;
     if (optimizer.weight_DC ~= 0)
         
         % Calculates the distillation curve
         [vol, Td] = DistillationCurve(target.P, x, target.delta, rhos, database.MW, database.vpType, database.vpCoeffs);
-        Tdi_target = interp1q(target.vol, target.Td, target.voli');
-        Tdi_current = interp1q(vol', Td', target.voli');
+        Tdi_target = interp1(target.vol, target.Td, target.voli');
+        Tdi_current = interp1(vol, Td, target.voli');
         
-        % Calculates the error (see Narayanaswamy and Pepiot, Comb. Theory Mod. 5, p. 883-897, 2018)
-        sigma2 = target.sigma_DC^2;
+        % Calculates the error 
         for i=1:length(target.voli)
-            optimizer.F_DC = optimizer.F_DC + (1.-exp(-(Tdi_target(i)-Tdi_current(i))^2./2/sigma2))^2.;
+            %F_DC = F_DC + (1.-exp(-(Tdi_target(i)-Tdi_current(i))^2./2/sigma2))^2.;
+            F_DC = F_DC + (1-Tdi_current(i)/Tdi_target(i))^2;
         end
-        optimizer.F_DC = optimizer.F_DC/length(target.voli);
+       F_DC = F_DC/length(target.voli);
         
     end
+
+    % Ignition delay times
+    if optimizer.weight_idt==0
+        idt_surrogate = 0;
+    else
+        if target.IdtCalculationType == "kriging"
+        idt_surrogate = IgnitionDelayTimes(target.list_species,target.TIdt, target.PIdt, target.phiIdt,...
+         x, idtkriging.species, idtkriging.model, target.tauType, target.IdtCalculationType, idtkriging.logarithm); 
+        else
+        idt_surrogate = IgnitionDelayTimes(target.list_species,target.TIdt, target.PIdt, target.phiIdt,...
+         x, net.species, net.net, target.tauType, target.IdtCalculationType, net.logarithm);
+        end
+    end
+    F_IDT = 0;
+    
+    % Laminar burning velocities
+    if optimizer.weight_lbv==0
+        lbv_surrogate = 0;
+    else
+        LBVpures = lbvmodel.sLpures;
+        LBVtarget = target.lbv;
+        try
+        if numel(lbvmodel.phipures) ~= numel(target.phiLBV)
+            % if phi do not coincide, do an interpolation
+            phimin = max([min(lbvmodel.phipures),min(target.phiLBV)]);
+            phimax = min([max(lbvmodel.phipures),max(target.phiLBV)]);
+            idxphi = find( (lbvmodel.phipures >= phimin) .* (lbvmodel.phipures <= phimax) );
+            phis = lbvmodel.phipures(idxphi);
+            LBVpures = lbvmodel.sLpures(idxphi,:);
+            LBVtarget = interp1(target.phiLBV,target.lbv,phis);
+        end
+        catch
+        end
+        lbv_surrogate = LaminarBurningVelocitiesPoly(LBVpures, ...
+               lbvmodel.LBVcoeffs, lbvmodel.LBVexponents, x);
+%         lbv_surrogate = LaminarBurningVelocitiesPoly(lbvmodel.sLpures, ...
+%                lbvmodel.LBVcoeffs, lbvmodel.LBVexponents, x);
+    end
+    F_LBV = 0;
     
     % Objective function (single contributions)
-    if (optimizer.error_type == 1)
-        
-        optimizer.F_HC  = (1. - exp( -(HC_surrogate-target.HC)^2/(2*target.sigma_HC^2)))^2;
-        optimizer.F_MW  = (1. - exp( -(MW_surrogate-target.MW)^2/(2*target.sigma_MW^2)))^2;
-        optimizer.F_CN  = (1. - exp( -(CN_surrogate-target.CN)^2/(2*target.sigma_CN^2)))^2;
-        optimizer.F_TSI = (1. - exp( -(TSI_surrogate-target.TSI)^2/(2*target.sigma_TSI^2)))^2;
-        optimizer.F_mu  = (1. - exp( -(mu_surrogate-target.mu)^2/(2*target.sigma_mu^2)))^2;
-        optimizer.F_YSI = (1. - exp( -(YSI_surrogate-target.YSI)^2/(2*target.sigma_YSI^2)))^2;
+        F_HC  = (1. - HC_surrogate/target.HC)^2;
+        F_MW  = (1. - MW_surrogate/target.MW)^2;
+        F_CN  = (1. - CN_surrogate/target.CN)^2;
+        F_TSI = (1. - TSI_surrogate/target.TSI)^2; 
+        F_mu  = (1. - mu_surrogate/target.mu)^2;
+        F_YSI = (1. - YSI_surrogate/target.YSI)^2;
+        F_rho = (1. - rho_surrogate/target.rho)^2;
+        if optimizer.weight_idt~=0
+        for i=1:length(idt_surrogate)
+            F_IDT = F_IDT + (1. - log(idt_surrogate(i))/log(target.Idt(i)))^2; 
+        end
+        F_IDT = F_IDT./numel(target.Idt);
+        end
+        if optimizer.weight_lbv~=0
+        for i=1:length(lbv_surrogate)
+            F_LBV = F_LBV + (1. - lbv_surrogate(i)/LBVtarget(i))^2;
+        end
+        F_LBV = F_LBV./numel(target.lbv);
+        end
 
-        
-    elseif (optimizer.error_type == 2)
-        
-        optimizer.F_HC  = (1. - HC_surrogate/target.HC)^2;
-        optimizer.F_MW  = (1. - MW_surrogate/target.MW)^2;
-        optimizer.F_CN  = (1. - CN_surrogate/target.CN)^2;
-        optimizer.F_TSI = (1. - TSI_surrogate/target.TSI)^2; 
-        optimizer.F_mu  = (1. - mu_surrogate/target.mu)^2;
-        optimizer.F_YSI = (1. - YSI_surrogate/target.YSI)^2;
- 
-
-    elseif (optimizer.error_type == 3)
-        
-        optimizer.F_HC  = (1. - exp( -(HC_surrogate-target.HC)^2/target.HC))^2;
-        optimizer.F_MW  = (1. - exp( -(MW_surrogate-target.MW)^2/target.MW))^2;
-        optimizer.F_CN  = (1. - exp( -(CN_surrogate-target.CN)^2/target.CN))^2;
-        optimizer.F_TSI = (1. - exp( -(TSI_surrogate-target.TSI)^2/target.TSI))^2;
-        optimizer.F_mu  = (1. - exp( -(mu_surrogate-target.mu)^2/target.mu))^2;
-        optimizer.F_YSI = (1. - exp( -(YSI_surrogate-target.YSI)^2/target.YSI))^2;
-         
-    end
-
+    F.F_HC  = F_HC;    F.F_MW  = F_MW;    
+    F.F_CN  = F_CN;    F.F_TSI = F_TSI;
+    F.F_mu  = F_mu;    F.F_YSI = F_YSI;   
+    F.F_rho = F_rho;   F.F_IDT = F_IDT;
+    F.F_LBV = F_LBV;   F.F_DC  = F_DC;
+    F.w_HC  = optimizer.weight_HC;    F.w_MW  = optimizer.weight_MW;
+    F.w_CN  = optimizer.weight_CN;    F.w_TSI = optimizer.weight_TSI;
+    F.w_mu  = optimizer.weight_mu;    F.w_YSI = optimizer.weight_YSI;
+    F.w_rho = optimizer.weight_rho;   F.w_IDT = optimizer.weight_idt;
+    F.w_LBV = optimizer.weight_lbv;   F.w_DC  = optimizer.weight_DC;
     % Objective function
-    f = optimizer.weight_HC*optimizer.F_HC + ...
-        optimizer.weight_MW*optimizer.F_MW + ...
-        optimizer.weight_CN*optimizer.F_CN + ...
-        optimizer.weight_TSI*optimizer.F_TSI + ...
-        optimizer.weight_mu*optimizer.F_mu + ...
-        optimizer.weight_YSI*optimizer.F_YSI + ...        
-        optimizer.weight_DC*optimizer.F_DC;
+    f = optimizer.weight_HC*F_HC + ...
+        optimizer.weight_MW*F_MW + ...
+        optimizer.weight_CN*F_CN + ...
+        optimizer.weight_TSI*F_TSI + ...
+        optimizer.weight_mu*F_mu + ...
+        optimizer.weight_YSI*F_YSI + ...        
+        optimizer.weight_DC*F_DC + ...
+        optimizer.weight_rho*F_rho + ...
+        optimizer.weight_idt*F_IDT + ...
+        optimizer.weight_lbv*F_LBV;
 
 end

@@ -8,7 +8,7 @@ The methodology is inspired by the following papers:
 
 It is written purely in Matlab language. It is self-contained. There is no external dependency.
 
-Note: this package requires Matlab **R2016b** or latter, since it utilizes a new series of Matlab features.
+Note: this package requires Matlab **R2016b** or later, since it utilizes a new series of Matlab features.
 
 Installation
 -------
@@ -20,6 +20,38 @@ git clone https://github.com/acuoci/OpenSMOKEpp_SurrogateOptimizer.git
 ```console
 SurrogateOptimizer
 ```
+
+Notes
+-------
+This Matlab package implements an optimization algorithm to find the best fuel surrogate matching a set of experimental properties of a fuel.
+The main script is ./src/OptimizeSurrogate.m
+
+Properties currently implemented are:
+- Molecular weight (MW)
+- Hydrogen/Carbon ratio (HC)
+- Density (rho)
+- Viscosity (mu)
+- Cetane number (CN)
+- Yield sooting index (YSI)
+- Distillation curve (DC)*
+- Ignition delay times curve (IDT)*
+- Laminar burning velocities curve (LBV)*
+
+The user can set these properties as target (or any subset, just set the relative weight to zero).
+*Curves used as target are not set in the main script, but on external files in the ./data folder
+
+The Matlab package uses as input a database "./data/Database.xml" containing some chemical species and their properties.
+You can expand it according to your available data.
+Note that IDT and LBV are not computed exactly, but using models derived for some mixtures. For this reason, IDT and LBV curves can be used only with a limited palette of species.
+
+The package can exploit parallel computing.
+The optimization is carried out on two levels (be sure to have Optimization Toolbox available on your Matlab installation)
+- a first rough scan with the genetic algorithm (ga)
+- a series of deeper trials with patternsearch and/or fmincon
+Few plots visualizations are available, as well as the possibility to save results to an output file
+
+This tool is the result of Simone Pertesana's thesis work, under the supervision of Marco Mehl and Alberto Cuoci (Department of chemistry, materials and chemical engineering - Politecnico di Milano)
+
 
 FeedBack
 -------
@@ -34,7 +66,7 @@ Contributing
 5. Create a pull request
 6. I accept your pull request
 
-Don't bunch up changes, e.g. if you have bug-fixes, new features and style changes, rather make 3 seperate pull requests. Ensure that you introduce tests/examples for any new functionality
+Don't bunch up changes, e.g. if you have bug-fixes, new features and style changes, rather make 3 separate pull requests. Ensure that you introduce tests/examples for any new functionality
 
 License
 -------

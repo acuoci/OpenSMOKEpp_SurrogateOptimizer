@@ -2,7 +2,7 @@ function mu = ComponentViscosity(T, type, coeffs)
 
 % ComponentViscosity - Calculates the viscosity of each species
 %
-% Syntax:  mu = ComponentViscosity(T, coeffs)
+% Syntax:  mu = ComponentViscosity(T, type, coeffs)
 %
 % Inputs:
 %    T - temperature (in K)

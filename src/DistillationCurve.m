@@ -30,7 +30,7 @@ function [vol, T_distillation] = ...
     V0 = MoleFractions2MolarVolume(x0, rho, MW);
     
     % Bubble temperature
-    T=0.;                                                   % Initial temperature (in C)
+    T = 0.;                                                 % Initial temperature (in C)
     T_distillation(1)=Flash(T, P, x0, 0., type, coeffs);    % First point in distillation curve
 
     % Loop over the whole range

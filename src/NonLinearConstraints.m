@@ -33,13 +33,13 @@ function [c, ceq] = NonLinearConstraints(z)
     
     % Molecular Weight
     MW_surrogate = sum(x.*database.nH)*1.+sum(x.*database.nC)*12.;
-    
+
     % H/C ratio
     HC_surrogate = sum(x.*database.nH)/sum(x.*database.nC);
-    
+
     % Mass fractions
     omega = x.*database.MW/MW_surrogate;
-    
+
     % Density (kg/m3)
     rhos = ComponentDensity(database.rhoType, database.rhoCoeffs);
     

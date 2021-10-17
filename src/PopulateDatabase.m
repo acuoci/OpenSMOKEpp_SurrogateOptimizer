@@ -1,4 +1,4 @@
-function components_database = ...
+function [components_database, list_families] = ...
          PopulateDatabase(foldername, filename)
      
 % PopulateDatabase - Reads a XML database containing the relevant data
@@ -16,7 +16,7 @@ function components_database = ...
 %    components_database - vector of individual components
 %
 % --------------------------- BEGIN CODE -------------------------------- %
-
+    
     % PARSEXML Convert XML file to a MATLAB structure.
     try
        name = strcat(foldername, filename);
@@ -24,7 +24,7 @@ function components_database = ...
     catch
        error('Failed to read XML file %s.',filename);
     end
-
+    list_families = {};
     % Recurse over child nodes. This could run into problems with very deeply nested trees.
     try
 
@@ -108,7 +108,7 @@ function components_database = ...
                  components_database(index).CN = CN;
                  components_database(index).TSI = TSI;
                  components_database(index).YSI = YSI;
-
+                 list_families = addFamily(list_families,string(family));
              end
 
        end
@@ -116,4 +116,17 @@ function components_database = ...
     catch
        error('Unable to parse XML file %s.', filename);
     end
-    
+
+end
+function families = addFamily(families,newFamily)
+    % If the current family is new, add it
+    isnew = true;
+    if numel(families) > 0
+        for i = 1:numel(families)
+            if strcmp(families{i},newFamily), isnew = false; end
+        end
+    end
+    if isnew == true
+        families{numel(families)+1} = newFamily;
+    end
+end

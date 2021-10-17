@@ -80,25 +80,27 @@ function database = ...
     end
     
     % Normal boiling temperature (in C)
-    database.Tbn = ComponentBoilingTemperature(760., database.vpType, database.vpCoeffs);
     for j = 1:length(list_species)
         x0 = zeros(1,length(list_species));
         x0(j)=1.;
-        database.Tbn(j) = Flash(database.Tbn(j), 760., x0, 0., database.vpType, database.vpCoeffs);
-        database.Tbn(j)
+        database.Tbn(j) = Flash(30, 760., x0, 0., database.vpType, database.vpCoeffs);
     end
     
     % Viscosities
-    mus = ComponentViscosity(298., database.muType, database.muCoeffs);
+    mus = ComponentViscosity(273.15, database.muType, database.muCoeffs);
     
-    fprintf('--------------------------------------------------------------------------------------\n');
-    fprintf('   Database: individual species                                                       \n');
-    fprintf('--------------------------------------------------------------------------------------\n');
-    fprintf('       Species Family      MW     H/C     CN     TSI     YSI    mu(cP)    Tb(C)       \n');
+    % Densities
+    rhos = ComponentDensity(database.rhoType, database.rhoCoeffs);
+    
+    fprintf('-------------------------------------------------------------------------------------------\n');
+    fprintf('   Species considered                                                                      \n');
+    fprintf('-------------------------------------------------------------------------------------------\n');
+    fprintf('       Species Family      MW     H/C     CN     TSI     YSI    mu(cP)@0C Tb(C)   rho(kg/m3)\n');
     for j = 1:length(list_species)
-        fprintf('%14s %6d %7.2f %7.3f %6.2f  %6.2f  %6.2f  %6.2f    %7.3f\n', ...
+        fprintf('%14s %6d %7.2f %7.3f %6.2f  %6.2f  %6.2f  %6.2f     %6.2f   %7.3f \n', ...
             list_species{j}, database.family_index(j), ...
             database.MW(j), database.nH(j)/database.nC(j), database.CN(j),...
-            database.TSI(j), database.YSI(j), mus(j), database.Tbn(j) );
+            database.TSI(j), database.YSI(j), mus(j), database.Tbn(j), rhos(j) );
     end
-    fprintf('--------------------------------------------------------------------------------------\n');
+    fprintf('-------------------------------------------------------------------------------------------\n');
+	
