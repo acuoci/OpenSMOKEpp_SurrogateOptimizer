@@ -80,10 +80,12 @@ function database = ...
     end
     
     % Normal boiling temperature (in C)
+    database.Tbn = ComponentBoilingTemperature(760., database.vpType, database.vpCoeffs);
     for j = 1:length(list_species)
         x0 = zeros(1,length(list_species));
         x0(j)=1.;
-        database.Tbn(j) = Flash(0, 760., x0, 0., database.vpType, database.vpCoeffs);
+        database.Tbn(j) = Flash(database.Tbn(j), 760., x0, 0., database.vpType, database.vpCoeffs);
+        database.Tbn(j)
     end
     
     % Viscosities
