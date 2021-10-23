@@ -11,6 +11,22 @@ clear variables;
 clear global;
 close all;
 
+
+% ----------------------------------------------------------------------- %
+% Path to external libraries
+% ----------------------------------------------------------------------- %
+% IMPORTANT: be sure the LD_LIBRARY_PATH environment variable is properly 
+%            pointing at the folder where the libcurvematching.so 
+%            is located (../../CurveMatchingC++Interface)
+%            This must be done before launching MATLAB
+addpath('../../CurveMatchingC++Interface/curvematchinglib')
+
+% ----------------------------------------------------------------------- %
+% Test the C++ Interface
+% ----------------------------------------------------------------------- %
+TestCppInterface(true);
+
+
 global target;          % definition of targets for optimization
 global database;        % database of individual components
 global optimizer;       % optimizer options
